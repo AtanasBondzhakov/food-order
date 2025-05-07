@@ -1,6 +1,4 @@
-import { useReducer } from "react";
-
-const { createContext } = require("react");
+import { createContext, useReducer } from "react";
 
 const CartContext = createContext({
     items: [],
@@ -18,7 +16,7 @@ const cartReducer = (state, action) => {
             const existingItem = state.items[existingCartItemIndex];
             const updatedItem = {
                 ...existingItem,
-                quantity: existingItem.quantity += 1
+                quantity: existingItem.quantity + 1
             };
 
             updatedItems[existingCartItemIndex] = updatedItem;
@@ -61,11 +59,15 @@ export function CartContextProvider({ children }) {
         dispatchCartAction({ type: 'REMOVE_ITEM' });
     };
 
-    const CartContext = {
+    const cartContextValues = {
         items: cart.items,
         addItem,
         removeItem
     };
 
-    return <CartContext.Provider>{children}</CartContext.Provider>
+    console.log(cartContextValues)
+
+    return <CartContext.Provider value={cartContextValues}>{children}</CartContext.Provider>
 };
+
+export default CartContext;
