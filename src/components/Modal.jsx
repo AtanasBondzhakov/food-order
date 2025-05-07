@@ -3,7 +3,8 @@ import { createPortal } from "react-dom";
 
 export default function Modal({
     children,
-    open
+    open,
+    className = ''
 }) {
     const dialog = useRef();
 
@@ -14,7 +15,11 @@ export default function Modal({
     }, [open]);
 
     return (
-        createPortal(<dialog>{children}</dialog>,
-            document.getElementById('modal'))
+        createPortal(
+            <dialog ref={dialog} className={`modal ${className}`}>
+                {children}
+            </dialog>,
+            document.getElementById('modal')
+        )
     );
 };
