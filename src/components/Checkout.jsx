@@ -28,6 +28,11 @@ export default function Checkout() {
         userProgressCtx.hideCheckout();
     };
 
+    const handleFinish = () => {
+        userProgressCtx.hideCheckout();
+        cartCtx.clearCart();
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -54,12 +59,12 @@ export default function Checkout() {
     }
 
     if (data && !error) {
-        return <Modal open={userProgressCtx.progress === 'checkout'} onClose={handleClose}>
+        return <Modal open={userProgressCtx.progress === 'checkout'} onClose={handleFinish}>
             <h2>Success!</h2>
             <p>Your order was submitted successfully.</p>
             <p>We will get back to you with more details via email within the next few minutes.</p>
             <p className="modal-actions">
-                <Button onClick={handleClose}>Okay</Button>
+                <Button onClick={handleFinish}>Okay</Button>
             </p>
         </Modal>
     }
