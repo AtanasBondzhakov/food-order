@@ -5,10 +5,21 @@ import Input from "./Input";
 import Modal from "./Modal";
 import CartContext from "../store/CartContext";
 import UserProgressContext from "../store/UserProgressContext";
+import useFetch from "../hooks/useFetch.js";
+
+const url = 'http://localhost:3000/orders';
+const requestConfig = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+};
 
 export default function Checkout() {
     const cartCtx = useContext(CartContext);
     const userProgressCtx = useContext(UserProgressContext);
+
+    const { data, isLoading: isSending, error, sendRequest } = useFetch(url, requestConfig, {});
 
     const cartTotal = cartCtx.items.reduce((totalPrice, item) => totalPrice + item.quantity * item.price, 0);
 
@@ -16,24 +27,18 @@ export default function Checkout() {
         userProgressCtx.hideCheckout();
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const fd = new FormData(e.target);
         const customerData = Object.fromEntries(fd.entries());
 
-        fetch('http://localhost:3000/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                order: {
-                    items: cartCtx.items,
-                    customer: customerData
-                }
-            })
-        });
+        await sendRequest(JSON.stringify({
+            order: {
+                items: cartCtx.items,
+                customer: customerData
+            }
+        }));
     };
     return (
         <Modal open={userProgressCtx.progress === 'checkout'} onClose={handleClose}>
@@ -48,10 +53,6 @@ export default function Checkout() {
                     <Input label="Postal Code" type="text" id="postal-code" />
                     <Input label="City" type="text" id="city" />
                 </div>
-                <p className="modal-actions">
-                    <Button type="button" textOnly onClick={handleClose}>Close</Button>
-                    <Button>Submit Order</Button>
-                </p>
             </form>
         </Modal>
     );

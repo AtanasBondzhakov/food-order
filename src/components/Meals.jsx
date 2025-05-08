@@ -5,7 +5,7 @@ import Error from "./Error.jsx";
 const requestConfig = {}
 
 export default function Meals() {
-    const url = 'http://localhost:3000/mealssss';
+    const url = 'http://localhost:3000/meals';
 
     const { data: loadedMeals, isLoading, error } = useFetch(url, requestConfig, []);
 

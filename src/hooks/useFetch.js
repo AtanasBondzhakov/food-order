@@ -16,11 +16,11 @@ export default function useFetch(url, config, initialData) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
 
-    const sendRequest = useCallback(async () => {
+    const sendRequest = useCallback(async (data) => {
         setIsLoading(true);
 
         try {
-            const resData = await sendHttpRequest(url, config);
+            const resData = await sendHttpRequest(url, {...config, body: data});
             setData(resData);
         } catch (err) {
             setError(err.message || 'Something went wrong.');
@@ -39,5 +39,6 @@ export default function useFetch(url, config, initialData) {
         data,
         loading: isLoading,
         error,
+        sendRequest
     }
 }
