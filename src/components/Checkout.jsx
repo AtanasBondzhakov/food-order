@@ -20,7 +20,14 @@ export default function Checkout() {
     const cartCtx = useContext(CartContext);
     const userProgressCtx = useContext(UserProgressContext);
 
-    const { data, isLoading: isSending, error, sendRequest } = useFetch(url, requestConfig);
+    const {
+        data,
+        isLoading:
+        isSending,
+        error,
+        sendRequest,
+        clearData
+    } = useFetch(url, requestConfig);
 
     const cartTotal = cartCtx.items.reduce((totalPrice, item) => totalPrice + item.quantity * item.price, 0);
 
@@ -31,6 +38,7 @@ export default function Checkout() {
     const handleFinish = () => {
         userProgressCtx.hideCheckout();
         cartCtx.clearCart();
+        clearData();
     };
 
     const handleSubmit = async (e) => {
