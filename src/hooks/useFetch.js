@@ -11,8 +11,8 @@ async function sendHttpRequest(url, config) {
     return resData;
 }
 
-export default function useFetch(url, config) {
-    const [data, setData] = useState();
+export default function useFetch(url, config, initialData) {
+    const [data, setData] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
 
@@ -30,8 +30,10 @@ export default function useFetch(url, config) {
     }, [url, config]);
 
     useEffect(() => {
-        sendRequest();
-    }, [sendRequest]);
+        if ((config && (config.method === 'GET' || !config.method)) || !config) {
+            sendRequest();
+        }
+    }, [sendRequest, config]);
 
     return {
         data,
