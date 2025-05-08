@@ -37,7 +37,7 @@ export default function useFetch(url, config, initialData) {
 
     return {
         data,
-        loading: isLoading,
+        isLoading,
         error,
         sendRequest
     }
