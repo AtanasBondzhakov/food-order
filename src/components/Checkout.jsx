@@ -1,4 +1,5 @@
-import { useContext } from "react";
+import { useContext, useActionState } from "react";
+
 import { currencyFormatter } from "../util/formatting";
 import Button from "./Button";
 import Input from "./Input";
@@ -22,8 +23,6 @@ export default function Checkout() {
 
     const {
         data,
-        isLoading:
-        isSending,
         error,
         sendRequest,
         clearData
@@ -41,7 +40,7 @@ export default function Checkout() {
         clearData();
     };
 
-    const checkoutAction = async (fd) => {
+    const checkoutAction = async (prevState, fd) => {
         const customerData = Object.fromEntries(fd.entries());
 
         await sendRequest(JSON.stringify({
@@ -51,6 +50,8 @@ export default function Checkout() {
             }
         }));
     };
+
+    const [formState, formAction, isSending] = useActionState(checkoutAction, null);
 
     let actions = (
         <>
@@ -76,7 +77,7 @@ export default function Checkout() {
 
     return (
         <Modal open={userProgressCtx.progress === 'checkout'} onClose={handleClose}>
-            <form action={checkoutAction}>
+            <form action={formAction}>
                 <h2>Checkout</h2>
                 <p>Total Amount: {currencyFormatter.format(cartTotal)}</p>
 
